@@ -2,7 +2,7 @@ body {
     margin: 8px;
 }
 
-#main {
+.images {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;

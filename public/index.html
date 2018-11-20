@@ -8,10 +8,20 @@
 <body>
     <h1>Imageboard</h1>
     <div id="main">
-        <div class="image" v-for = "image in images">
-            <img :src="image.url" alt="">
-            <p>{{image.title}}</p>
+        <div class="images">
+            <div class="image" v-for="image in images">
+                <img :src="image.url" :alt="image.title">
+                <p>{{image.title}}</p>
+            </div>
         </div>
+
+        <form>
+            <input v-model="form.title" type="text" name="title" placeholder="title" required>
+            <input v-model="form.description" type="text" name="description" placeholder="description" required>
+            <input v-model="form.username" type="text" name="username" placeholder="username" required>
+            <input type="file" accept="image/*" @change="handleFileChange" required>
+            <button @click="uploadFile">Upload</button>
+        </form>
     </div>
 
     <script src="/js/vue.js"></script>
