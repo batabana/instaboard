@@ -1,8 +1,54 @@
 (function() {
+
+    Vue.component('modal', {
+        template: "#modal-template",
+        props: ['imageId'],
+        data: function() {
+            return {
+                image: {},
+                comment: "",
+                commentUser: "",
+                comments: []
+            };
+        },
+        mounted: function() {
+            var self = this;
+            axios.get("/image/" + this.imageId)
+                .then(function(resp) {
+                    self.image = resp.data.rows[0];
+                    self.comments = resp.data.rows;
+                })
+                .catch((err) => {
+                    console.log("error while getting image: ", err);
+                });
+        },
+        methods: {
+            closeComponent: function() {
+                this.$emit("close-component");
+            },
+            postComment: function(e) {
+                e.preventDefault();
+                var self = this;
+                var formData = {
+                    "comment": this.comment,
+                    "commentUser": this.commentUser
+                };
+                axios.post("/image/" + this.imageId, formData)
+                    .then(function(resp) {
+                        self.comments.unshift(resp.data.results.rows[0]);
+                    })
+                    .catch((err) => {
+                        console.log("error while posting comment: ", err);
+                    });
+            }
+        }
+    });
+
     new Vue({
         el: "#main",
         data: {
             images: [],
+            imageId: 0,
             form: {
                 title: "",
                 description: "",
@@ -14,8 +60,7 @@
             var self = this;
             axios.get("/images")
                 .then(function(resp) {
-                    var imagesFromServer = resp.data.rows;
-                    self.images = imagesFromServer;
+                    self.images = resp.data.rows;
                 })
                 .catch((err) => {
                     console.log("error while getting images: ", err);
@@ -37,11 +82,18 @@
 
                 axios.post("/upload", formData)
                     .then(function(resp) {
-                        self.images.unshift(resp.data.newImage);
+                        console.log(resp.data);
+                        self.images.unshift(resp.data.rows[0]);
                     })
                     .catch((err) => {
                         console.log("error while uploading image: ", err);
                     });
+            },
+            toggleModal: function(e) {
+                this.imageId = e.target.id;
+            },
+            closeModal: function() {
+                this.imageId = 0;
             }
         }
     });

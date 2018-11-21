@@ -1,5 +1,8 @@
 body {
     margin: 8px;
+    background: #ECE9E6;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #FFFFFF, #ECE9E6);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .images {
@@ -9,13 +12,57 @@ body {
 }
 
 .image {
-    margin: 8px;
+    margin: 12px;
     box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
-    padding: 5px;
+    /* padding: 5px; */
+    background: white;
+    border-radius: 3px;
 }
 
-img {
+.image p {
+    margin: 10px;
+}
+
+.image img {
     height: 300px;
     width: 300px;
     object-fit: cover;
+}
+
+h1 {
+    color: #333333;
+}
+
+.modal-box {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 7;
+    background-color: rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+}
+
+.modal {
+    background-color: white;
+    padding: 30px 30px;
+    border-radius: 5px;
+
+}
+
+.modal img {
+    max-height: 600px;
+    max-width: 600px;
+}
+
+.comment .content {
+    margin-top: 5px;
+}
+
+#close-icon {
+    float: right;
 }

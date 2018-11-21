@@ -1,14 +1,16 @@
 // setup express
 const express = require("express");
 const app = express();
-const {getImages, saveImage} = require("./db.js");
+app.disable("x-powered-by");
+const db = require("./db.js");
 const multer = require('multer');
 const uidSafe = require('uid-safe');
 const path = require('path');
 const s3 = require("./s3.js");
-const config = require("./config.json")
-
-app.disable("x-powered-by");
+const config = require("./config.json");
+const bodyParser = require("body-parser");
+// tell bodyparser to not ignore json-files
+app.use(bodyParser.json());
 
 // set up file uploading
 const diskStorage = multer.diskStorage({
@@ -38,18 +40,10 @@ app.post('/upload', uploader.single('file'), s3.upload, function(req, res) {
     if (req.file) {
         const {username, title, description} = req.body;
         const url = config.s3Url + req.file.filename;
-        saveImage(url, username, title, description)
-            .then(
-                res.json({
-                    success: true,
-                    newImage: {
-                        url: url,
-                        username: username,
-                        title: title,
-                        description: description
-                    }
-                })
-            )
+        db.saveImage(url, username, title, description)
+            .then((results) => {
+                res.json(results);
+            })
             .catch((err) => {
                 console.log("error in saveImage: ", err);
             });
@@ -61,11 +55,35 @@ app.post('/upload', uploader.single('file'), s3.upload, function(req, res) {
 });
 
 app.get("/images", (req, res) => {
-    getImages()
+    db.getImages()
         .then((results) => {
             res.json(results);
         })
         .catch(err => console.log("Error in GET /images: ", err));
+});
+
+app.get("/image/:id", (req, res) => {
+    const imageId = req.params.id;
+    db.getImage(imageId)
+        .then((results) => {
+            res.json(results);
+        })
+        .catch(err => console.log(`Error in GET /image/${imageId}: ${err}`));
+});
+
+app.post("/image/:id", (req, res) => {
+    const imageId = req.params.id;
+    const {comment, commentUser} = req.body;
+    db.saveComment(comment, commentUser, imageId)
+        .then((results) => {
+            res.json({
+                success: true,
+                results
+            });
+        })
+        .catch((err) => {
+            console.log(`Error in POST /image/${imageId}: ${err}`);
+        });
 });
 
 app.listen(8080, () => console.log("Listening on 8080."));

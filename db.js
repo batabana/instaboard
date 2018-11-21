@@ -13,7 +13,28 @@ exports.getImages = () => {
 
 exports.saveImage = (url, username, title, description) => {
     return db.query(
-        `INSERT INTO images (url, username, title, description) VALUES ($1, $2, $3, $4)`,
+        `INSERT INTO images (url, username, title, description) VALUES ($1, $2, $3, $4)
+        RETURNING *`,
         [url, username || null, title || null, description || null]
+    );
+};
+
+exports.getImage = (id) => {
+    return db.query(
+        `SELECT i.id AS imageId, url, i.username AS imageUser, title, description, i.created_at AS imageCreate, comment, c.username AS commentUser, c.created_at AS commentCreate
+        FROM images AS i
+        LEFT JOIN comments AS c
+        ON i.id = c.image_id
+        WHERE i.id = $1
+        ORDER BY commentCreate DESC`,
+        [id]
+    );
+};
+
+exports.saveComment = (comment, username, image_id) => {
+    return db.query(
+        `INSERT INTO comments (comment, username, image_id) VALUES ($1, $2, $3)
+        RETURNING comment, username AS commentUser, created_at AS commentCreate`,
+        [comment || null, username || null, image_id]
     );
 };

@@ -4,25 +4,69 @@
     <title>Imageboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <link rel="stylesheet" href="/styles.css">
+    <link rel="shortcut icon" href="/favicon.png" />
 </head>
 <body>
     <h1>Imageboard</h1>
+    <!-- start Vue container -->
     <div id="main">
-        <div class="images">
-            <div class="image" v-for="image in images">
-                <img :src="image.url" :alt="image.title">
-                <p>{{image.title}}</p>
-            </div>
-        </div>
 
-        <form>
+        <form class="ui input">
             <input v-model="form.title" type="text" name="title" placeholder="title" required>
             <input v-model="form.description" type="text" name="description" placeholder="description" required>
             <input v-model="form.username" type="text" name="username" placeholder="username" required>
             <input type="file" accept="image/*" @change="handleFileChange" required>
-            <button @click="uploadFile">Upload</button>
+            <button class="ui button" @click="uploadFile">Upload</button>
         </form>
+
+        <div class="images">
+            <div class="image" v-for="image in images" @click="toggleModal">
+                <img :src="image.url" :id="image.id" :alt="image.title">
+                <p>{{image.title}}</p>
+            </div>
+        </div>
+
+        <modal :image-id="imageId" v-if="imageId" @close-component="closeModal"></modal>
     </div>
+    <!-- end Vue container -->
+
+    <!-- start model template -->
+    <script type="text/x-template" id="modal-template">
+        <div class="modal-box">
+            <div class="modal">
+                <i class="close icon" id="close-icon" @click="closeComponent"></i>
+                <h1>{{image.title}}</h1>
+                <div>
+                    <img :src="image.url" :id="image.id" :alt="image.title">
+                    <p>{{image.description}}</p>
+                    <p>Uploaded by {{image.imageuser}} on {{image.imagecreate}}</p>
+                </div>
+
+                <div class="ui comments">
+                    <h3 class="ui dividing header">Comments</h3>
+                    <form class="ui input">
+                        <input v-model="comment" type="text" name="comment" placeholder="Comment" required>
+                        <input v-model="commentUser" type="text" name="commentUser" placeholder="Username" required>
+                        <button class="ui blue button" @click="postComment">Add Comment</button>
+                    </form>
+                    <div v-for="comment in comments">
+                        <div class="comment">
+                            <div class="content">
+                                <a class="author">{{comment.commentuser}}</a>
+                                <div class="metadata">
+                                    <span class="date">{{comment.commentcreate}}</span>
+                                </div>
+                                <div class="text">
+                                    {{comment.comment}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    <!-- end model template -->
 
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>

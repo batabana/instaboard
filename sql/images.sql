@@ -10,22 +10,15 @@ CREATE TABLE images(
 );
 
 INSERT INTO images (url, username, title, description) VALUES (
-    'https://s3.amazonaws.com/spicedling/jAVZmnxnZ-U95ap2-PLliFFF7TO0KqZm.jpg',
-    'funkychicken',
-    'Welcome to Berlin and the future!',
+    'https://s3.amazonaws.com/spicedling/QVMj8paCpYJdqw1swhOmq8KOCcrnkE6r.jpeg',
+    'bata',
+    'Welcome to Zürich',
     'This photo brings back so many great memories.'
 );
 
 INSERT INTO images (url, username, title, description) VALUES (
-    'https://s3.amazonaws.com/spicedling/wg8d94G_HrWdq7bU_2wT6Y6F3zrX-kej.jpg',
-    'discoduck',
-    'Elvis',
-    'We can''t go on together with suspicious minds.'
-);
-
-INSERT INTO images (url, username, title, description) VALUES (
-    'https://s3.amazonaws.com/spicedling/XCv4AwJdm6QuzjenFPKJocpipRNNMwze.jpg',
-    'discoduck',
-    'Hello Berlin',
-    'This is going to be worth a lot of money one day.'
+    'https://s3.amazonaws.com/spicedling/t3pgAiYBFFMlkFydUiugtgjUmZeNPoxa.jpeg',
+    'bata',
+    'Welcome to Zürich again',
+    'This photo brings back so many great memories.'
 );
