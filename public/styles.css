@@ -1,5 +1,5 @@
 body {
-    margin: 8px;
+    margin: 10px;
     background: #ECE9E6;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #FFFFFF, #ECE9E6);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to left, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -12,7 +12,7 @@ body {
 }
 
 .image {
-    margin: 12px;
+    margin: 12px 12px 12px 0;
     box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
     /* padding: 5px; */
     background: white;
@@ -21,16 +21,13 @@ body {
 
 .image p {
     margin: 10px;
+    font-weight: bold;
 }
 
 .image img {
     height: 300px;
     width: 300px;
     object-fit: cover;
-}
-
-h1 {
-    color: #333333;
 }
 
 .modal-box {
@@ -48,6 +45,7 @@ h1 {
 }
 
 .modal {
+    margin-top: 20px;
     background-color: white;
     padding: 30px 30px;
     border-radius: 5px;
@@ -55,7 +53,7 @@ h1 {
 }
 
 .modal img {
-    max-height: 600px;
+    max-height: 400px;
     max-width: 600px;
 }
 
@@ -65,4 +63,5 @@ h1 {
 
 #close-icon {
     float: right;
+    cursor: pointer;
 }

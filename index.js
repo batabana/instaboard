@@ -41,10 +41,10 @@ app.post('/upload', uploader.single('file'), s3.upload, function(req, res) {
         const {username, title, description} = req.body;
         const url = config.s3Url + req.file.filename;
         db.saveImage(url, username, title, description)
-            .then((results) => {
+            .then(results => {
                 res.json(results);
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log("error in saveImage: ", err);
             });
     } else {
@@ -56,7 +56,7 @@ app.post('/upload', uploader.single('file'), s3.upload, function(req, res) {
 
 app.get("/images", (req, res) => {
     db.getImages()
-        .then((results) => {
+        .then(results => {
             res.json(results);
         })
         .catch(err => console.log("Error in GET /images: ", err));
@@ -65,7 +65,7 @@ app.get("/images", (req, res) => {
 app.get("/image/:id", (req, res) => {
     const imageId = req.params.id;
     db.getImage(imageId)
-        .then((results) => {
+        .then(results => {
             res.json(results);
         })
         .catch(err => console.log(`Error in GET /image/${imageId}: ${err}`));
@@ -75,7 +75,7 @@ app.post("/image/:id", (req, res) => {
     const imageId = req.params.id;
     const {comment, commentUser} = req.body;
     db.saveComment(comment, commentUser, imageId)
-        .then((results) => {
+        .then(results => {
             res.json({
                 success: true,
                 results
@@ -83,6 +83,17 @@ app.post("/image/:id", (req, res) => {
         })
         .catch((err) => {
             console.log(`Error in POST /image/${imageId}: ${err}`);
+        });
+});
+
+app.get("/get-more-images/:id", (req, res) => {
+    const lastId = req.params.id;
+    db.getMoreImages(lastId)
+        .then(results => {
+            res.json(results);
+        })
+        .catch((err) => {
+            console.log(`Error in GET /get-more-images/${lastId}: ${err}`);
         });
 });
 

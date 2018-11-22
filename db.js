@@ -6,8 +6,8 @@ exports.getImages = () => {
     return db.query(
         `SELECT *
         FROM images
-        ORDER BY created_at DESC
-        LIMIT 12`
+        ORDER BY id DESC
+        LIMIT 3`
     );
 };
 
@@ -29,6 +29,22 @@ exports.getImage = (id) => {
         ORDER BY commentCreate DESC`,
         [id]
     );
+};
+
+exports.getMoreImages = lastId => {
+    return db.query(
+        `SELECT *, (
+            SELECT MIN(id)
+            FROM images
+            ) AS last_id
+        FROM images
+        WHERE id < $1
+        ORDER BY id DESC
+        LIMIT 3`,
+        [lastId]
+    ).then(results => {
+        return results.rows;
+    });
 };
 
 exports.saveComment = (comment, username, image_id) => {
