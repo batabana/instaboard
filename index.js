@@ -44,9 +44,7 @@ app.post('/upload', uploader.single('file'), s3.upload, function(req, res) {
             .then(results => {
                 res.json(results);
             })
-            .catch(err => {
-                console.log("error in saveImage: ", err);
-            });
+            .catch(err => console.log("error in saveImage: ", err));
     } else {
         res.json({
             success: false
@@ -81,9 +79,7 @@ app.post("/image/:id", (req, res) => {
                 results
             });
         })
-        .catch((err) => {
-            console.log(`Error in POST /image/${imageId}: ${err}`);
-        });
+        .catch(err => console.log(`Error in POST /image/${imageId}: ${err}`));
 });
 
 app.get("/get-more-images/:id", (req, res) => {
@@ -92,9 +88,7 @@ app.get("/get-more-images/:id", (req, res) => {
         .then(results => {
             res.json(results);
         })
-        .catch((err) => {
-            console.log(`Error in GET /get-more-images/${lastId}: ${err}`);
-        });
+        .catch(err => console.log(`Error in GET /get-more-images/${lastId}: ${err}`));
 });
 
 app.listen(8080, () => console.log("Listening on 8080."));

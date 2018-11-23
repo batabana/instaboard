@@ -3,3 +3,5 @@ node_modules
 secrets.json
 notes.md
 semantic.min.css
+semantic
+moment.js

@@ -49,7 +49,18 @@ body {
     background-color: white;
     padding: 30px 30px;
     border-radius: 5px;
+}
 
+.arrow-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 400px;
+    width: 600px;
+}
+
+.arrow-box img {
+    margin: 10px;
 }
 
 .modal img {

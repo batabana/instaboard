@@ -21,7 +21,19 @@ exports.saveImage = (url, username, title, description) => {
 
 exports.getImage = (id) => {
     return db.query(
-        `SELECT i.id AS imageId, url, i.username AS imageUser, title, description, i.created_at AS imageCreate, comment, c.username AS commentUser, c.created_at AS commentCreate
+        `SELECT i.id AS imageId, url, i.username AS imageUser, title, description, i.created_at AS imageCreate, comment, c.username AS commentUser, c.created_at AS commentCreate, (
+            SELECT id
+            FROM images
+            WHERE id > $1
+            ORDER BY id ASC
+            LIMIT 1
+        ) AS next_id, (
+            SELECT id
+            FROM images
+            WHERE id < $1
+            ORDER BY id DESC
+            LIMIT 1
+        ) AS prev_id
         FROM images AS i
         LEFT JOIN comments AS c
         ON i.id = c.image_id
