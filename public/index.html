@@ -1,26 +1,27 @@
 <!doctype html>
 <html>
 <head>
-    <title>Imageboard</title>
+    <title>Instaboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/semantic/semantic.min.css">
     <link rel="stylesheet" href="/styles.css">
     <link rel="shortcut icon" href="/favicon.png" />
 </head>
 <body>
-    <h1><a href="/">Imageboard</a></h1>
+
     <!-- start Vue container -->
     <div id="main">
+        <h1><a href="/">instaboard</a></h1>
+        <i class="cloud upload icon" id="upload-icon" @click="showUpload"></i>
 
-        <form class="ui input">
+        <form class="ui input" v-if="uploadVisible">
             <input v-model="form.title" type="text" name="title" placeholder="title">
             <input v-model="form.description" type="text" name="description" placeholder="description">
             <input v-model="form.username" type="text" name="username" placeholder="username">
             <input id="fileupload" type="file" accept="image/*" @change="handleFileChange">
             <button class="ui blue button" @click="uploadFile">Upload</button>
+            <p v-if="errors.length">Please provide: <b v-for="error in errors">{{error}}</b></p>
         </form>
-
-        <p v-if="errors.length">Please provide: <b v-for="error in errors">{{error}}</b>
-        </p>
 
         <div class="images">
             <div class="image" v-for="image in images">
@@ -42,7 +43,8 @@
         <div class="modal-box" @click="closeComponent">
             <div class="modal">
                 <i class="close icon" id="close-icon" @click="closeComponent"></i>
-                <h1>{{image.title}}</h1>
+                <h2>{{image.title}}</h2>
+                <br>
                 <div class="arrow-box">
                     <a :href="'#' + next_id">
                         <i class="angle left icon" v-if="next_id"></i>
@@ -52,8 +54,9 @@
                         <i class="angle right icon" v-if="prev_id"></i>
                     </a>
                 </div>
-                <p>{{image.description}}</p>
-                <p>Uploaded by {{image.imageuser}} on {{image.imagecreate}}</p>
+                <br>
+                <p><b>{{image.imageuser}}:</b> {{image.description}}<br>
+                <span class="date">{{image.imagecreate}}</span></p>
 
                 <div class="ui comments">
                     <h3 class="ui dividing header">Comments</h3>

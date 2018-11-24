@@ -117,7 +117,8 @@
                 file: null
             },
             showMoreButton: false,
-            errors: []
+            errors: [],
+            uploadVisible: false
         },
         mounted: function() {
             var self = this;
@@ -198,6 +199,13 @@
             },
             closeModal: function() {
                 this.imageId = 0;
+            },
+            showUpload: function() {
+                if (this.uploadVisible) {
+                    this.uploadVisible = false;
+                } else {
+                    this.uploadVisible = true;
+                }
             }
         }
     });
