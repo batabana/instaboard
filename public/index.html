@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Instaboard</title>
+    <title>instaboard</title>
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/semantic/semantic.min.css">
     <link rel="stylesheet" href="/styles.css">
@@ -12,16 +12,24 @@
     <!-- start Vue container -->
     <div id="main">
         <h1><a href="/">instaboard</a></h1>
-        <i class="cloud upload icon" id="upload-icon" @click="showUpload"></i>
-
+        <!-- <img src="/favicon.png" alt="" id="upload-icon" @click="showUpload"> -->
+        <img src="/upload_icon.svg" alt="" id="upload-icon" @click="showUpload">
+        <br>
         <form class="ui input" v-if="uploadVisible">
             <input v-model="form.title" type="text" name="title" placeholder="title">
             <input v-model="form.description" type="text" name="description" placeholder="description">
             <input v-model="form.username" type="text" name="username" placeholder="username">
-            <input id="fileupload" type="file" accept="image/*" @change="handleFileChange">
-            <button class="ui blue button" @click="uploadFile">Upload</button>
-            <p v-if="errors.length">Please provide: <b v-for="error in errors">{{error}}</b></p>
+
+            <div class="fileUpload ui button">
+                <span>choose file</span>
+                <input id="uploadBtn" type="file" class="upload" accept="image/*" @change="handleFileChange"/>
+            </div>
+            <input id="uploadFile" placeholder="no file chosen" disabled="disabled" />
+
+            <!-- <input id="fileupload" type="file" accept="image/*" @change="handleFileChange"> -->
+            <button class="ui blue button" @click="uploadFile">upload</button>
         </form>
+        <p v-if="errors.length">please provide: <b v-for="error in errors">{{error}}</b></p>
 
         <div class="images">
             <div class="image" v-for="image in images">
@@ -55,8 +63,17 @@
                     </a>
                 </div>
                 <br>
-                <p><b>{{image.imageuser}}:</b> {{image.description}}<br>
-                <span class="date">{{image.imagecreate}}</span></p>
+                <p>
+                    <b>{{image.imageuser}}:</b>
+                    {{image.description}}
+                    <br>
+                    <span class="date">
+                        {{image.imagecreate_rel}}
+                        <span class="full-date">
+                            : {{image.imagecreate}}
+                        </span>
+                    </span>
+                </p>
 
                 <div class="ui comments">
                     <h3 class="ui dividing header">Comments</h3>
@@ -72,7 +89,12 @@
                             <div class="content">
                                 <a class="author">{{comment.commentuser}}</a>
                                 <div class="metadata">
-                                    <span class="date">{{comment.commentcreate}}</span>
+                                    <span class="date">
+                                        {{comment.commentcreate_rel}}
+                                        <span class="full-date">
+                                            : {{comment.commentcreate}}
+                                        </span>
+                                    </span>
                                 </div>
                                 <div class="text">
                                     {{comment.comment}}
@@ -86,7 +108,6 @@
     </script>
     <!-- end model template -->
 
-    <!-- <script src="/js/moment.js"></script> -->
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
     <script src="/js/script.js" type="text/javascript"></script>

@@ -129,8 +129,8 @@
 
             axios.get("/images")
                 .then(function(resp) {
-                    self.images = resp.data.rows;
-                    if (resp.data.rows.length) {
+                    self.images = resp.data;
+                    if (resp.data.length) {
                         self.showMoreButton = true;
                     }
                 })
@@ -140,6 +140,7 @@
         },
         methods: {
             handleFileChange: function(e) {
+                document.getElementById("uploadFile").value = e.target.value;
                 this.form.file = e.target.files[0];
             },
             uploadFile: function(e) {
@@ -179,7 +180,7 @@
                         self.form.title = "";
                         self.form.description = "";
                         self.form.username = "";
-                        document.getElementById("fileupload").value = "";
+                        document.getElementById("uploadFile").value = "";
                     })
                     .catch((err) => {
                         console.log("error while uploading image: ", err);

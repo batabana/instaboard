@@ -8,10 +8,19 @@ body {
 h1 {
     font-family: 'Pacifico', cursive;
     font-weight: normal;
+    display: inline;
 }
 
 #upload-icon {
-    float: right;
+    vertical-align: center;
+    height: 25px;
+    margin-left: 10px;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+form {
+    margin-top: 20px;
 }
 
 .images {
@@ -87,8 +96,33 @@ h1 {
     margin-top: 5px;
 }
 
+.full-date {
+    visibility: hidden;
+}
+
+.date:hover .full-date {
+  visibility: visible;
+}
+
 #close-icon {
     float: right;
     cursor: pointer;
     margin-bottom: 30px;
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }

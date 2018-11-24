@@ -11,6 +11,7 @@ const config = require("./config.json");
 const bodyParser = require("body-parser");
 // tell bodyparser to not ignore json-files
 app.use(bodyParser.json());
+const moment = require('moment');
 
 // set up file uploading
 const diskStorage = multer.diskStorage({
@@ -64,6 +65,12 @@ app.get("/image/:id", (req, res) => {
     const imageId = req.params.id;
     db.getImage(imageId)
         .then(results => {
+            for (var i = 0; i < results.rows.length; i++) {
+                if (results.rows[i].commentcreate) {
+                    results.rows[i].commentcreate_rel = moment(results.rows[i].commentcreate).fromNow();
+                }
+                results.rows[i].imagecreate_rel = moment(results.rows[i].imagecreate).fromNow();
+            }
             res.json(results);
         })
         .catch(err => console.log(`Error in GET /image/${imageId}: ${err}`));
@@ -74,6 +81,8 @@ app.post("/image/:id", (req, res) => {
     const {comment, commentUser} = req.body;
     db.saveComment(comment, commentUser, imageId)
         .then(results => {
+            results.rows[0].commentcreate_rel = moment(results.rows[0].commentcreate).fromNow();
+            console.log(results.rows[0]);
             res.json({
                 success: true,
                 results

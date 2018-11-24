@@ -7,8 +7,10 @@ exports.getImages = () => {
         `SELECT *
         FROM images
         ORDER BY id DESC
-        LIMIT 3`
-    );
+        LIMIT 4`
+    ).then(results => {
+        return results.rows;
+    });
 };
 
 exports.saveImage = (url, username, title, description) => {
@@ -21,7 +23,7 @@ exports.saveImage = (url, username, title, description) => {
 
 exports.getImage = (id) => {
     return db.query(
-        `SELECT i.id AS imageId, url, i.username AS imageUser, title, description, i.created_at AS imageCreate, comment, c.username AS commentUser, c.created_at AS commentCreate, (
+        `SELECT i.id AS imageId, url, i.username AS imageUser, title, description, to_char(i.created_at, 'DD Mon YYYY HH24:MI:SS') AS imageCreate, comment, c.username AS commentUser, to_char(c.created_at, 'DD Mon YYYY HH24:MI:SS') AS commentCreate, (
             SELECT id
             FROM images
             WHERE id > $1
@@ -52,7 +54,7 @@ exports.getMoreImages = lastId => {
         FROM images
         WHERE id < $1
         ORDER BY id DESC
-        LIMIT 3`,
+        LIMIT 4`,
         [lastId]
     ).then(results => {
         return results.rows;
@@ -62,7 +64,7 @@ exports.getMoreImages = lastId => {
 exports.saveComment = (comment, username, image_id) => {
     return db.query(
         `INSERT INTO comments (comment, username, image_id) VALUES ($1, $2, $3)
-        RETURNING comment, username AS commentUser, created_at AS commentCreate`,
+        RETURNING comment, username AS commentUser, to_char(created_at, 'DD Mon YYYY HH24:MI:SS') AS commentCreate`,
         [comment || null, username || null, image_id]
     );
 };
