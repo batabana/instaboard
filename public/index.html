@@ -64,13 +64,17 @@
                 </div>
                 <br>
                 <p>
-                    <b>{{image.imageuser}}:</b>
+                    <b>{{image.username}}:</b>
                     {{image.description}}
+                    <br  v-if="tags.length">
+                    <a v-for="tag in tags" :href="'#' + tag.tag">
+                        {{tag.tag}}
+                    </a>
                     <br>
                     <span class="date">
-                        {{image.imagecreate_rel}}
+                        {{image.created_at_rel}}
                         <span class="full-date">
-                            : {{image.imagecreate}}
+                            : {{image.created_at}}
                         </span>
                     </span>
                 </p>
@@ -87,12 +91,12 @@
                     <div v-for="comment in comments">
                         <div class="comment">
                             <div class="content">
-                                <a class="author">{{comment.commentuser}}</a>
+                                <a class="author">{{comment.username}}</a>
                                 <div class="metadata">
                                     <span class="date">
-                                        {{comment.commentcreate_rel}}
+                                        {{comment.created_at_rel}}
                                         <span class="full-date">
-                                            : {{comment.commentcreate}}
+                                            : {{comment.created_at}}
                                         </span>
                                     </span>
                                 </div>

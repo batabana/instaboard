@@ -64,14 +64,23 @@ app.get("/images", (req, res) => {
 app.get("/image/:id", (req, res) => {
     const imageId = req.params.id;
     db.getImage(imageId)
-        .then(results => {
-            for (var i = 0; i < results.rows.length; i++) {
-                if (results.rows[i].commentcreate) {
-                    results.rows[i].commentcreate_rel = moment(results.rows[i].commentcreate).fromNow();
-                }
-                results.rows[i].imagecreate_rel = moment(results.rows[i].imagecreate).fromNow();
+        .then(image => {
+            if (!image.length) {
+                return res.json(image);
             }
-            res.json(results);
+            image[0].created_at_rel = moment(image[0].created_at).fromNow();
+            image[0].created_at = moment(image[0].created_at).format('MMM Do YYYY, HH:mm:ss');
+            db.getComments(imageId)
+                .then(comments => {
+                    for (var i = 0; i < comments.length; i++) {
+                        comments[i].created_at_rel = moment(comments[i].created_at).fromNow();
+                        comments[i].created_at = moment(comments[i].created_at).format('MMM Do YYYY, HH:mm:ss');
+                    }
+                    db.getTags(imageId)
+                        .then(tags => {
+                            res.json({image, comments, tags});
+                        });
+                });
         })
         .catch(err => console.log(`Error in GET /image/${imageId}: ${err}`));
 });
@@ -81,12 +90,9 @@ app.post("/image/:id", (req, res) => {
     const {comment, commentUser} = req.body;
     db.saveComment(comment, commentUser, imageId)
         .then(results => {
-            results.rows[0].commentcreate_rel = moment(results.rows[0].commentcreate).fromNow();
-            console.log(results.rows[0]);
-            res.json({
-                success: true,
-                results
-            });
+            results.rows[0].created_at_rel = moment(results.rows[0].created_at).fromNow();
+            results.rows[0].created_at = moment(results.rows[0].created_at).format('MMM Do YYYY, HH:mm:ss');
+            res.json(results);
         })
         .catch(err => console.log(`Error in POST /image/${imageId}: ${err}`));
 });

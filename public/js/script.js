@@ -8,21 +8,14 @@
                 var self = this;
                 axios.get("/image/" + this.imageId)
                     .then(function(resp) {
-                        if (resp.data.rowCount > 0) {
-                            var next_id = resp.data.rows[0].next_id;
-                            var prev_id = resp.data.rows[0].prev_id;
-                            if (next_id) {
-                                self.next_id = next_id;
-                            } else {
-                                self.next_id = 0;
-                            }
-                            if (prev_id) {
-                                self.prev_id = prev_id;
-                            } else {
-                                self.prev_id = 0;
-                            }
-                            self.image = resp.data.rows[0];
-                            self.comments = resp.data.rows;
+                        if (resp.data.length || resp.data.image) {
+                            var next_id = resp.data.image[0].next_id;
+                            var prev_id = resp.data.image[0].prev_id;
+                            (next_id) ? self.next_id = next_id : self.next_id = 0;
+                            (prev_id) ? self.prev_id = prev_id : self.prev_id = 0;
+                            self.image = resp.data.image[0];
+                            self.comments = resp.data.comments;
+                            self.tags = resp.data.tags;
                         } else {
                             location.hash = "";
                             self.$emit("close-component");
@@ -39,6 +32,7 @@
                 comment: "",
                 commentUser: "",
                 comments: [],
+                tags: [],
                 errors: [],
                 next_id: 0,
                 prev_id: 0
@@ -48,17 +42,14 @@
             var self = this;
             axios.get("/image/" + this.imageId)
                 .then(function(resp) {
-                    if (resp.data.rowCount > 0) {
-                        var next_id = resp.data.rows[0].next_id;
-                        var prev_id = resp.data.rows[0].prev_id;
-                        if (next_id) {
-                            self.next_id = next_id;
-                        }
-                        if (prev_id) {
-                            self.prev_id = prev_id;
-                        }
-                        self.image = resp.data.rows[0];
-                        self.comments = resp.data.rows;
+                    if (resp.data.length || resp.data.image) {
+                        var next_id = resp.data.image[0].next_id;
+                        var prev_id = resp.data.image[0].prev_id;
+                        if (next_id) self.next_id = next_id;
+                        if (prev_id) self.prev_id = prev_id;
+                        self.image = resp.data.image[0];
+                        self.comments = resp.data.comments;
+                        self.tags = resp.data.tags;
                     } else {
                         location.hash = "";
                         self.$emit("close-component");
@@ -94,7 +85,7 @@
 
                 axios.post("/image/" + this.imageId, formData)
                     .then(function(resp) {
-                        self.comments.unshift(resp.data.results.rows[0]);
+                        self.comments.unshift(resp.data.rows[0]);
                         self.comment = "";
                         self.commentUser = "";
                     })
