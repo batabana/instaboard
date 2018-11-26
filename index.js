@@ -106,4 +106,8 @@ app.get("/get-more-images/:id", (req, res) => {
         .catch(err => console.log(`Error in GET /get-more-images/${lastId}: ${err}`));
 });
 
+app.get("/*", (req, res) => {
+    res.redirect("/");
+});
+
 app.listen(8080, '127.0.0.1', () => console.log("Listening on 8080."));

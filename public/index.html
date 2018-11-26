@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <button @click="getMoreImages" class="ui blue button" v-if="showMoreButton">show more</button>
+        <button @click="getMoreImages" class="ui blue button" v-if="showMoreButton" id="showMoreButton">show more</button>
 
         <modal :image-id="imageId" v-if="imageId" @close-component="closeModal"></modal>
     </div>

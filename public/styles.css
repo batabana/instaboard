@@ -50,6 +50,7 @@ form {
 
 .image:hover {
     box-shadow: 0px 0px 5px 0px rgba(32,126,130,1);
+    transition: box-shadow .3s linear;
 }
 
 .modal-box {
@@ -119,6 +120,7 @@ form {
     overflow: hidden;
     margin: 10px;
 }
+
 .fileUpload input.upload {
     position: absolute;
     top: 0;
@@ -129,4 +131,15 @@ form {
     cursor: pointer;
     opacity: 0;
     filter: alpha(opacity=0);
+}
+
+#showMoreButton {
+    margin-bottom: 20px;
+}
+
+@media only screen and (min-width: 1500px) {
+    .image img {
+        height: 380px;
+        width: 380px;
+    }
 }
