@@ -21,18 +21,18 @@ exports.upload = (req, res, next) => {
         return res.sendStatus(500);
     }
 
-    // configuration für AWS, Headers setzen
+    // configuration for AWS, set headers
     const s3Request = client.put(req.file.filename, {
         'Content-Type': req.file.mimetype,
         'Content-Length': req.file.size,
         'x-amz-acl': 'public-read'
     });
 
-    // Daten an AWS senden
+    // send data to AWS
     const readStream = fs.createReadStream(req.file.path);
     readStream.pipe(s3Request);
 
-    // Antwort von AWS
+    // response from AWS
     s3Request.on('response', s3Response => {
         const wasSuccessful = s3Response.statusCode == 200;
         if (wasSuccessful) {
