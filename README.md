@@ -27,7 +27,7 @@ node index.js
 ![board](screenshots/board.png)
 
 ### upload
-![upload](screenshots/upload)
+![upload](screenshots/upload.png)
 
 ### image modal
 ![modal](screenshots/modal.png)
