@@ -24,7 +24,10 @@ node index.js
 ## Preview
 
 ### imageboard
+![board](screenshots/board.png)
 
 ### upload
+![upload](screenshots/upload)
 
 ### image modal
+![modal](screenshots/modal.png)
