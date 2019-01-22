@@ -1,18 +1,18 @@
 (function() {
-
-    Vue.component('modal', {
+    Vue.component("modal", {
         template: "#modal-template",
-        props: ['imageId'],
+        props: ["imageId"],
         watch: {
             imageId: function() {
                 var self = this;
-                axios.get("/image/" + this.imageId)
+                axios
+                    .get("/image/" + this.imageId)
                     .then(function(resp) {
                         if (resp.data.length || resp.data.image) {
                             var next_id = resp.data.image[0].next_id;
                             var prev_id = resp.data.image[0].prev_id;
-                            (next_id) ? self.next_id = next_id : self.next_id = 0;
-                            (prev_id) ? self.prev_id = prev_id : self.prev_id = 0;
+                            next_id ? (self.next_id = next_id) : (self.next_id = 0);
+                            prev_id ? (self.prev_id = prev_id) : (self.prev_id = 0);
                             self.image = resp.data.image[0];
                             self.comments = resp.data.comments;
                             self.tags = resp.data.tags;
@@ -21,7 +21,7 @@
                             self.$emit("close-component");
                         }
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         console.log("error while getting image: ", err);
                     });
             }
@@ -40,7 +40,8 @@
         },
         mounted: function() {
             var self = this;
-            axios.get("/image/" + this.imageId)
+            axios
+                .get("/image/" + this.imageId)
                 .then(function(resp) {
                     if (resp.data.length || resp.data.image) {
                         var next_id = resp.data.image[0].next_id;
@@ -55,13 +56,13 @@
                         self.$emit("close-component");
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log("error while getting image: ", err);
                 });
         },
         methods: {
             closeComponent: function(e) {
-                if (e.target.classList[0] == "modal-box" | e.target.classList[0] == "close") {
+                if (e.target.classList[0] == "modal-box" || e.target.classList[0] == "close") {
                     location.hash = "";
                     this.$emit("close-component");
                 }
@@ -71,27 +72,26 @@
                 e.preventDefault();
 
                 this.errors = [];
-                if (!this.comment) {
-                    this.errors.push("comment ");
-                }
-                if (!this.commentUser) {
-                    this.errors.push("username ");
-                }
+                !this.comment && this.errors.push("comment ");
+                !this.commentUser && this.errors.push("username ");
 
-                var formData = {
-                    "comment": this.comment,
-                    "commentUser": this.commentUser
-                };
+                if (!this.errors.length) {
+                    var formData = {
+                        comment: this.comment,
+                        commentUser: this.commentUser
+                    };
 
-                axios.post("/image/" + this.imageId, formData)
-                    .then(function(resp) {
-                        self.comments.unshift(resp.data.rows[0]);
-                        self.comment = "";
-                        self.commentUser = "";
-                    })
-                    .catch((err) => {
-                        console.log("error while posting comment: ", err);
-                    });
+                    axios
+                        .post("/image/" + this.imageId, formData)
+                        .then(function(resp) {
+                            self.comments.unshift(resp.data[0]);
+                            self.comment = "";
+                            self.commentUser = "";
+                        })
+                        .catch(err => {
+                            console.log("error while posting comment: ", err);
+                        });
+                }
             }
         }
     });
@@ -118,14 +118,15 @@
                 self.imageId = location.hash.slice(1);
             });
 
-            axios.get("/images")
+            axios
+                .get("/images")
                 .then(function(resp) {
                     self.images = resp.data;
                     if (resp.data.length) {
                         self.showMoreButton = true;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log("error while getting images: ", err);
                 });
         },
@@ -142,62 +143,52 @@
 
                 // form validation
                 this.errors = [];
-                if (!this.form.title) {
-                    this.errors.push("title ");
-                }
-                if (!this.form.description) {
-                    this.errors.push("description ");
-                }
-                if (!this.form.username) {
-                    this.errors.push("username ");
-                }
-                if (!this.form.file) {
-                    this.errors.push("file ");
-                }
+                !this.form.title && this.errors.push("title ");
+                !this.form.description && this.errors.push("description ");
+                !this.form.username && this.errors.push("username ");
+                !this.form.file && this.errors.push("file ");
 
-                // get form data incl. file
-                var formData = new FormData();
-                formData.append("file", this.form.file);
-                formData.append("title", this.form.title);
-                formData.append("description", this.form.description);
-                formData.append("username", this.form.username);
+                if (!this.errors.length) {
+                    // get form data incl. file
+                    var formData = new FormData();
+                    formData.append("file", this.form.file);
+                    formData.append("title", this.form.title);
+                    formData.append("description", this.form.description);
+                    formData.append("username", this.form.username);
 
-                // save to database
-                axios.post("/upload", formData)
-                    .then(function(resp) {
-                        self.images.unshift(resp.data.rows[0]);
+                    // save to database
+                    axios
+                        .post("/upload", formData)
+                        .then(function(resp) {
+                            self.images.unshift(resp.data[0]);
 
-                        // clear form fields
-                        self.form.title = "";
-                        self.form.description = "";
-                        self.form.username = "";
-                        document.getElementById("uploadFile").value = "";
-                    })
-                    .catch((err) => {
-                        console.log("error while uploading image: ", err);
-                    });
+                            // clear form fields
+                            self.form.title = "";
+                            self.form.description = "";
+                            self.form.username = "";
+                            document.getElementById("uploadFile").value = "";
+                        })
+                        .catch(err => {
+                            console.log("error while uploading image: ", err);
+                        });
+                }
             },
             getMoreImages: function() {
                 var lastId = this.images[this.images.length - 1].id;
                 var self = this;
-                axios.get("/get-more-images/" + lastId)
-                    .then(function(resp) {
-                        self.images.push.apply(self.images, resp.data);
-                        var lastIdNew = self.images[self.images.length - 1].id;
-                        if (lastIdNew == resp.data[0].last_id) {
-                            self.showMoreButton = false;
-                        }
-                    });
+                axios.get("/get-more-images/" + lastId).then(function(resp) {
+                    self.images.push.apply(self.images, resp.data);
+                    var lastIdNew = self.images[self.images.length - 1].id;
+                    if (lastIdNew == resp.data[0].last_id) {
+                        self.showMoreButton = false;
+                    }
+                });
             },
             closeModal: function() {
                 this.imageId = 0;
             },
-            showUpload: function() {
-                if (this.uploadVisible) {
-                    this.uploadVisible = false;
-                } else {
-                    this.uploadVisible = true;
-                }
+            toggleUpload: function() {
+                this.uploadVisible = this.uploadVisible ? false : true;
             }
         }
     });

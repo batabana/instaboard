@@ -2,8 +2,6 @@ node_modules
 .DS_Store
 secrets.json
 notes.md
-semantic.min.css
 semantic
-moment.js
 scrap
 .directory

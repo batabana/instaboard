@@ -1,53 +1,60 @@
-var spicedPg = require('spiced-pg');
+var spicedPg = require("spiced-pg");
+var db = spicedPg("postgres:postgres:postgres@localhost:5432/imageboard");
 
-var db = spicedPg('postgres:postgres:postgres@localhost:5432/imageboard');
-
-exports.getImages = () => {
-    return db.query(
-        `SELECT *
-        FROM images
-        ORDER BY id DESC
-        LIMIT 4`
-    ).then(results => {
-        return results.rows;
-    });
+exports.getImages = async () => {
+    const query = `
+        SELECT * 
+        FROM images 
+        ORDER BY id DESC 
+        LIMIT 4
+    `;
+    const { rows } = await db.query(query);
+    return rows;
 };
 
-exports.saveImage = (url, username, title, description) => {
-    return db.query(
-        `INSERT INTO images (url, username, title, description) VALUES ($1, $2, $3, $4)
-        RETURNING *`,
-        [url, username || null, title || null, description || null]
-    );
+exports.saveImage = async (url, username, title, description) => {
+    const query = `
+        INSERT INTO images (url, username, title, description) 
+        VALUES ($1, $2, $3, $4) 
+        RETURNING *
+    `;
+    const { rows } = await db.query(query, [
+        url,
+        username || null,
+        title || null,
+        description || null
+    ]);
+    return rows;
 };
 
-exports.getMoreImages = lastId => {
-    return db.query(
-        `SELECT *, (
+exports.getMoreImages = async lastId => {
+    const query = `
+        SELECT *, (
             SELECT MIN(id)
             FROM images
             ) AS last_id
         FROM images
         WHERE id < $1
         ORDER BY id DESC
-        LIMIT 4`,
-        [lastId]
-    ).then(results => {
-        return results.rows;
-    });
+        LIMIT 4
+    `;
+    const { rows } = await db.query(query, [lastId]);
+    return rows;
 };
 
-exports.saveComment = (comment, username, image_id) => {
-    return db.query(
-        `INSERT INTO comments (comment, username, image_id) VALUES ($1, $2, $3)
-        RETURNING comment, username, created_at`,
-        [comment || null, username || null, image_id]
-    );
+exports.saveComment = async (comment, username, image_id) => {
+    const query = `
+        INSERT INTO comments (comment, username, image_id)
+        VALUES ($1, $2, $3)
+        RETURNING comment, username, created_at
+    `;
+    const { rows } = await db.query(query, [comment || null, username || null, image_id]);
+    return rows;
 };
 
-exports.getImage = (id) => {
-    return db.query(
-        `SELECT *, (
+exports.getImage = async id => {
+    const query = `
+        SELECT *, (
             SELECT id
             FROM images
             WHERE id > $1
@@ -61,32 +68,30 @@ exports.getImage = (id) => {
             LIMIT 1
         ) AS prev_id
         FROM images
-        WHERE id = $1`,
-        [id]
-    ).then(results => {
-        return results.rows;
-    });
+        WHERE id = $1
+    `;
+    const { rows } = await db.query(query, [id]);
+    return rows;
 };
 
-exports.getComments = (image_id) => {
-    return db.query(
-        `SELECT *
-        FROM comments
+exports.getComments = async image_id => {
+    const query = `
+        SELECT * 
+        FROM comments 
+        WHERE image_id = $1 
+        ORDER BY created_at 
+        DESC
+    `;
+    const { rows } = await db.query(query, [image_id]);
+    return rows;
+};
+
+exports.getTags = async image_id => {
+    const query = `
+        SELECT * 
+        FROM tags 
         WHERE image_id = $1
-        ORDER BY created_at DESC`,
-        [image_id]
-    ).then(results => {
-        return results.rows;
-    });
-};
-
-exports.getTags = (image_id) => {
-    return db.query(
-        `SELECT *
-        FROM tags
-        WHERE image_id = $1`,
-        [image_id]
-    ).then(results => {
-        return results.rows;
-    });
+    `;
+    const { rows } = await db.query(query, [image_id]);
+    return rows;
 };
